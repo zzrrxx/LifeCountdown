@@ -8,6 +8,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <SevenSegmentDisplay.h>
+
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +17,9 @@ int main(int argc, char *argv[])
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
   QGuiApplication app(argc, argv);
+  
+  qmlRegisterType<SevenSegmentDisplay>("my.controls", 1, 0, "SevenSegmentDisplay");
+  
   
   QQmlApplicationEngine engine;
   const QUrl url(QStringLiteral("qrc:/main.qml"));

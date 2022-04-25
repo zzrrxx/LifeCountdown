@@ -3,6 +3,8 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.0 as Controls
 import Qt.labs.platform 1.0
 
+import my.controls 1.0
+
 Window {
     id: mainWindow
     visible: true
@@ -17,13 +19,62 @@ Window {
     
     color: Qt.rgba(0.5, 0.5, 0.5, 0.9)
     
+    
+    property var birthDay: new Date('1994-11-11T00:00:00')
+    property var deathDay: birthDay.setFullYear(birthDay.getFullYear() + 65)
+    
     Rectangle {
         id: rectangle
         x: 0
         y: 0
-        width: mainWindow.height
-        height: width
-        color: Qt.rgba(0.2, 1.0, 0.0, 0.7)
+        width: mainWindow.width
+        height: mainWindow.height
+        
+        
+        SevenSegmentDisplay {
+            id: display
+            anchors.fill: parent
+            //digitSize: 200 * sliderDigitSize.value
+            digitCount: 20
+            precision: 20
+            bgColor: "transparent"
+            onColor: "red"
+            offColor: "transparent"
+            verticalAlignment: SevenSegmentDisplay.AlignCenter
+            horizontalAlignment: SevenSegmentDisplay.AlignCenter
+
+            value: 0
+            onOverflow: {
+                //display.digitCount += 1
+                //display.precision += 1
+            }
+        }
+        SevenSegmentDisplay {
+            id: display1
+            digitSize: 14
+            digitCount: 3
+            precision: 3
+            bgColor: "transparent"
+            onColor: "red"
+            offColor: "transparent"
+            verticalAlignment: SevenSegmentDisplay.AlignCenter
+            horizontalAlignment: SevenSegmentDisplay.AlignCenter
+
+            value: 001
+            onOverflow: {
+                //display.digitCount += 1
+                //display.precision += 1
+            }
+        }
+        
+        Timer {
+            interval: 1
+            repeat: true
+            running: true
+            onTriggered: {
+                display.value = Math.ceil(deathDay - Math.abs(Date.now()) / 1000)
+            }
+        }
     }
 
     ParallelAnimation {
@@ -106,7 +157,7 @@ Window {
         id: systemTrayMenu
         MenuItem {
             text: qsTr("隐藏")
-            shortcut: "Ctrl+z"
+            //shortcut: "Ctrl+z"
             onTriggered: mainWindow.hide()
         }
         MenuItem {
@@ -118,7 +169,7 @@ Window {
     SystemTrayIcon {
         id:trayIcon
         visible: true
-        iconSource: "qrc:/images/TraffickingIn.svg"
+        //iconSource: "qrc:/images/TraffickingIn.svg"
         tooltip: "tiny-流量监控软件"
         onActivated: {
             mainWindow.show()
